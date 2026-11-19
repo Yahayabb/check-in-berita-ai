@@ -1,0 +1,100 @@
+import type { EntityInclination } from '../types';
+
+export const profiles: EntityInclination[] = [
+  {
+    id: 'profile-demo-news',
+    entityName: 'Berita Contoh (fictional news outlet)',
+    entityType: 'news outlet',
+    analysisStart: '2024-01-01',
+    analysisEnd: '2024-12-31',
+    sampleSize: 48,
+    totalMeasurableClaims: 31,
+    scrutinisedClaims: 19,
+    officialDataCitations: 22,
+    topicCounts: {
+      'Inflation & cost of living': 18,
+      Unemployment: 10,
+      'Poverty & household income': 12,
+      'Public health': 8,
+    },
+    sourceCounts: {
+      government: 20,
+      opposition: 9,
+      expertOrNgo: 13,
+    },
+    observations: [
+      'Synthetic topic labels show economic coverage in 40 of the 48 sampled items.',
+      'Twenty-two sampled items include an official-data citation in this demonstration dataset.',
+      'Nineteen of 31 measurable claims have a synthetic scrutiny label.',
+    ],
+    limitations: [
+      'This is a fictional profile with synthetic counts, not an analysis of a real news outlet.',
+      'The demonstration sample is not representative of output outside the stated analysis period.',
+      'Topic and source labels are illustrative and have not been independently reviewed.',
+    ],
+  },
+  {
+    id: 'profile-demo-politician',
+    entityName: 'Ahmad Demo (fictional politician)',
+    entityType: 'politician',
+    analysisStart: '2024-01-01',
+    analysisEnd: '2024-12-31',
+    sampleSize: 36,
+    totalMeasurableClaims: 28,
+    scrutinisedClaims: 16,
+    officialDataCitations: 11,
+    topicCounts: {
+      'Inflation & cost of living': 12,
+      Unemployment: 8,
+      'Poverty & household income': 10,
+      'Public health': 6,
+    },
+    sourceCounts: {
+      government: 8,
+      opposition: 10,
+      expertOrNgo: 7,
+    },
+    observations: [
+      'Synthetic labels assign 30 of 36 sampled statements to economic topics.',
+      'Eleven sampled statements include an official-data citation in the demonstration records.',
+      'Sixteen of 28 measurable claims have a synthetic scrutiny label.',
+    ],
+    limitations: [
+      'This is a fictional profile with synthetic counts, not an analysis of a real politician.',
+      'The sample describes only the constructed 2024 demonstration period.',
+      'Statements without measurable claims remain in the topic sample but outside the measurable-claim denominator.',
+    ],
+  },
+  {
+    id: 'profile-demo-reporter',
+    entityName: 'Rina Contoh (fictional reporter/influencer)',
+    entityType: 'reporter/influencer',
+    analysisStart: '2024-01-01',
+    analysisEnd: '2024-12-31',
+    sampleSize: 24,
+    totalMeasurableClaims: 18,
+    scrutinisedClaims: 12,
+    officialDataCitations: 9,
+    topicCounts: {
+      'Inflation & cost of living': 6,
+      Unemployment: 5,
+      'Poverty & household income': 7,
+      'Public health': 6,
+    },
+    sourceCounts: {
+      government: 7,
+      opposition: 4,
+      expertOrNgo: 8,
+    },
+    observations: [
+      'Synthetic topic labels are distributed across all four demonstration categories.',
+      'Nine of 24 sampled posts include an official-data citation in the fixture records.',
+      'Twelve of 18 measurable claims have a synthetic scrutiny label.',
+    ],
+    limitations: [
+      'This is a fictional profile with synthetic counts, not an analysis of a real reporter or influencer.',
+      'The small constructed sample cannot support conclusions beyond this demonstration.',
+      'Counts describe only the labelled fixtures and have not been independently audited.',
+    ],
+  },
+];
