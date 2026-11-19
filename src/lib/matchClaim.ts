@@ -64,6 +64,10 @@ function numericTokens(tokens: Set<string>): string[] {
   return [...tokens].filter((token) => /^\d+(?:\.\d+)?$/.test(token)).sort();
 }
 
+function yearTokens(tokens: Set<string>): string[] {
+  return numericTokens(tokens).filter((token) => /^(?:19|20)\d{2}$/.test(token));
+}
+
 function hasAny(tokens: Set<string>, vocabulary: Set<string>): boolean {
   return [...tokens].some((token) => vocabulary.has(token));
 }
@@ -78,13 +82,16 @@ function subnationalScope(text: string): number {
   );
 }
 
-function hasSemanticConflict(input: string, alias: string): boolean {
+function hasSemanticConflict(input: string, alias: string, allowValueConflicts: boolean): boolean {
   const inputTokens = new Set(input.split(' '));
   const aliasTokens = new Set(alias.split(' '));
   const inputNumbers = numericTokens(inputTokens);
   const aliasNumbers = numericTokens(aliasTokens);
 
-  if (inputNumbers.join(' ') !== aliasNumbers.join(' ')) {
+  if (
+    inputNumbers.join(' ') !== aliasNumbers.join(' ') &&
+    (!allowValueConflicts || yearTokens(inputTokens).join(' ') !== yearTokens(aliasTokens).join(' '))
+  ) {
     return true;
   }
 
@@ -106,7 +113,11 @@ function hasSemanticConflict(input: string, alias: string): boolean {
   return inputScope >= 0 && inputScope !== subnationalScope(alias);
 }
 
-export function matchClaim(input: string, claims: ClaimEvidence[]): ClaimMatch | null {
+export function matchClaim(
+  input: string,
+  claims: ClaimEvidence[],
+  options: { allowValueConflicts?: boolean } = {},
+): ClaimMatch | null {
   const normalisedInput = normaliseText(input);
   if (!normalisedInput) {
     return null;
@@ -128,7 +139,10 @@ export function matchClaim(input: string, claims: ClaimEvidence[]): ClaimMatch |
 
     for (const alias of claim.aliases) {
       const normalisedAlias = normaliseText(alias);
-      if (!normalisedAlias || hasSemanticConflict(normalisedInput, normalisedAlias)) {
+      if (
+        !normalisedAlias ||
+        hasSemanticConflict(normalisedInput, normalisedAlias, options.allowValueConflicts ?? false)
+      ) {
         continue;
       }
 

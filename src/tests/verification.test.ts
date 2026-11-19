@@ -150,6 +150,8 @@ describe('verifyClaim', () => {
       claim: null,
       profile: null,
       score: 0,
+      confidenceScore: 0,
+      isAbsurd: false,
       matchedAlias: '',
     };
 
@@ -159,12 +161,31 @@ describe('verifyClaim', () => {
     );
   });
 
-  it('does not invent a truth percentage field or value', () => {
+  it('returns false information and high comparison confidence for an absurd numeric conflict', () => {
+    const result = verifyClaim("Malaysia's inflation rate was 120% in 2024.", [claim], [profile]);
+
+    expect(result.verdict).toBe('False information');
+    expect(result.isAbsurd).toBe(true);
+    expect(result.claim?.claimedValue).toBe('120%');
+    expect(result.claim?.calculation).toContain('118.2 percentage points');
+    expect(result.confidenceScore).toBeGreaterThanOrEqual(85);
+  });
+
+  it('rejects an ordinary numeric conflict without labelling it absurd', () => {
+    const result = verifyClaim("Malaysia's inflation rate was 9% in 2024.", [claim], [profile]);
+
+    expect(result.verdict).toBe('False information');
+    expect(result.isAbsurd).toBe(false);
+    expect(result.claim?.claimedValue).toBe('9%');
+  });
+
+  it('exposes comparison confidence without inventing a truth probability', () => {
     const result = verifyClaim(claim.aliases[0], [claim], [profile]);
 
     expect(Object.keys(result).sort()).toEqual(
-      ['claim', 'matchedAlias', 'profile', 'score', 'verdict'].sort(),
+      ['claim', 'confidenceScore', 'isAbsurd', 'matchedAlias', 'profile', 'score', 'verdict'].sort(),
     );
+    expect(result.confidenceScore).toBe(99);
     expect(result).not.toHaveProperty('truthPercentage');
     expect(result).not.toHaveProperty('truthPercent');
     expect(result).not.toHaveProperty('truthScore');

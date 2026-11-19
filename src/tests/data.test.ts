@@ -14,6 +14,17 @@ describe('demo evidence flow', () => {
     expect(result.verdict).toBe(claims[0].verdict);
   });
 
+  it.each([
+    "Malaysia's inflation rate was 120% in 2024.",
+    'Kadar inflasi Malaysia ialah 120% pada 2024.',
+  ])('flags an absurd inflation value as false information: %s', (input) => {
+    const result = verifyClaim(input, claims, profiles);
+    expect(result.claim?.id).toBe(claims[0].id);
+    expect(result.verdict).toBe('False information');
+    expect(result.isAbsurd).toBe(true);
+    expect(result.confidenceScore).toBeGreaterThanOrEqual(85);
+  });
+
   it('returns insufficient evidence for an unrelated claim', () => {
     const result = verifyClaim('The durian orchestra launched a lunar ferry.', claims, profiles);
     expect(result.verdict).toBe('Insufficient evidence');

@@ -384,6 +384,8 @@ export default function App() {
               claim={result.claim}
               profile={result.profile}
               matchedAlias={result.matchedAlias}
+              confidenceScore={result.confidenceScore}
+              isAbsurd={result.isAbsurd}
             />
           )}
         </div>

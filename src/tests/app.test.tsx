@@ -19,7 +19,6 @@ describe('Check In Berita AI primary flow', () => {
 
   it.each([
     'A banana railway orbits Jupiter.',
-    "Malaysia's inflation rate was 9.8% in 2024.",
     "Malaysia's inflation rate was 1.8% in 2023.",
   ])('shows insufficient evidence instead of a false match for %s', async (input) => {
     render(<App />);
@@ -27,5 +26,17 @@ describe('Check In Berita AI primary flow', () => {
     fireEvent.click(screen.getByRole('button', { name: /check claim/i }));
 
     expect(await screen.findByText('Insufficient evidence: Check In Berita AI could not confidently match this claim to the currently approved evidence registry.')).toBeInTheDocument();
+  });
+
+  it('labels an absurd numeric conflict as false with a confidence score', async () => {
+    render(<App />);
+    fireEvent.change(screen.getByLabelText(/claim to check/i), {
+      target: { value: "Malaysia's inflation rate was 120% in 2024." },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /check claim/i }));
+
+    expect(await screen.findByText('False information')).toBeInTheDocument();
+    expect(screen.getByText('Absurd false / fake claim')).toBeInTheDocument();
+    expect(screen.getByRole('meter', { name: 'Comparison confidence score' })).toBeInTheDocument();
   });
 });
