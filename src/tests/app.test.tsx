@@ -17,9 +17,13 @@ describe('Check In Berita AI primary flow', () => {
     expect(screen.queryByText(/truth percentage/i)).not.toBeInTheDocument();
   });
 
-  it('shows the branded insufficient-evidence state', async () => {
+  it.each([
+    'A banana railway orbits Jupiter.',
+    "Malaysia's inflation rate was 9.8% in 2024.",
+    "Malaysia's inflation rate was 1.8% in 2023.",
+  ])('shows insufficient evidence instead of a false match for %s', async (input) => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText(/claim to check/i), { target: { value: 'A banana railway orbits Jupiter.' } });
+    fireEvent.change(screen.getByLabelText(/claim to check/i), { target: { value: input } });
     fireEvent.click(screen.getByRole('button', { name: /check claim/i }));
 
     expect(await screen.findByText('Insufficient evidence: Check In Berita AI could not confidently match this claim to the currently approved evidence registry.')).toBeInTheDocument();

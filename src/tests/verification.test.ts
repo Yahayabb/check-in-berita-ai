@@ -55,6 +55,12 @@ describe('normaliseText', () => {
     );
   });
 
+  it('preserves currency values with thousands separators', () => {
+    expect(normaliseText('Household income was RM9,155 per month')).toBe(
+      'household income ringgit 9155 month',
+    );
+  });
+
   it('removes common English stop words', () => {
     expect(normaliseText('The rate is in the economy and it was stable')).toBe(
       'rate economy stable',
@@ -94,6 +100,34 @@ describe('matchClaim', () => {
     expect(
       matchClaim('Did the government build 500 schools in Sabah during 2024?', [claim]),
     ).toBeNull();
+  });
+
+  it.each([
+    'Malaysia inflation rate fell to 8.1% in 2024',
+    'Malaysia inflation rate fell to 1.8% in 2023',
+  ])('rejects conflicting numbers or years instead of returning a false verdict: %s', (input) => {
+    expect(matchClaim(input, [claim])).toBeNull();
+  });
+
+  it('rejects reversed direction and negation', () => {
+    expect(matchClaim('Malaysia inflation rate rose to 1.8% in 2024', [claim])).toBeNull();
+    expect(matchClaim('Malaysia inflation rate did not fall to 1.8% in 2024', [claim])).toBeNull();
+  });
+
+  it('does not apply a national claim to a state', () => {
+    expect(matchClaim('Sabah Malaysia inflation rate fell to 1.8% in 2024', [claim])).toBeNull();
+  });
+
+  it('does not treat an exact value as an approximate registry claim', () => {
+    const approximateClaim: ClaimEvidence = {
+      ...claim,
+      id: 'claim-inflation-rounded-2024',
+      aliases: ['Malaysia inflation rate was about 2% in 2024'],
+      verdict: 'Mostly supported',
+    };
+
+    expect(matchClaim('Malaysia inflation rate was 2% in 2024', [approximateClaim])).toBeNull();
+    expect(matchClaim(approximateClaim.aliases[0], [approximateClaim])?.score).toBe(1);
   });
 });
 
