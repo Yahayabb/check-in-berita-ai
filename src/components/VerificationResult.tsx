@@ -8,6 +8,8 @@ interface VerificationResultProps {
   claim: ClaimEvidence;
   profile?: EntityInclination | null;
   matchedAlias?: string | null;
+  confidenceScore: number;
+  isAbsurd?: boolean;
 }
 
 function verdictClass(verdict: string) {
@@ -20,6 +22,7 @@ function verdictIcon(verdict: string): IconName {
     case 'Mostly supported':
       return 'check-circle';
     case 'Contradicted':
+    case 'False information':
       return 'alert';
     case 'Missing context':
       return 'info';
@@ -33,18 +36,32 @@ export function VerificationResult({
   claim,
   profile,
   matchedAlias,
+  confidenceScore,
+  isAbsurd = false,
 }: VerificationResultProps) {
   const sourceUrl = claim.sourceUrl.trim();
   const officialValueLabel = claim.needsHumanVerification
     ? 'Registry comparison value'
     : 'Official value';
+  const isFalse = verdict === 'False information' || verdict === 'Contradicted';
+  const confidenceLabel = confidenceScore >= 85 ? 'High' : confidenceScore >= 60 ? 'Moderate' : 'Low';
+  const confidenceBasis = isFalse
+    ? 'Based on registry-match strength and the direct conflict with the comparison value.'
+    : 'Based on registry-match strength and the available value comparison.';
 
   return (
     <div className="result-stack">
       <article className={`verdict-card verdict-${verdictClass(verdict)}`}>
         <div className="verdict-topline">
           <p className="section-kicker">Verification result</p>
-          {claim.needsHumanVerification && <span className="review-badge">Human review needed</span>}
+          <div className="verdict-badges">
+            {isFalse && (
+              <span className="false-claim-badge">
+                {isAbsurd ? 'Absurd false / fake claim' : 'False / fake claim'}
+              </span>
+            )}
+            {claim.needsHumanVerification && <span className="review-badge">Human review needed</span>}
+          </div>
         </div>
 
         <div className="verdict-heading">
@@ -56,6 +73,31 @@ export function VerificationResult({
             <p>{claim.explanation}</p>
           </div>
         </div>
+
+        <section className="confidence-panel" aria-labelledby="confidence-heading">
+          <div className="confidence-heading-row">
+            <div>
+              <p className="section-kicker" id="confidence-heading">Comparison confidence</p>
+              <p>{confidenceBasis}</p>
+            </div>
+            <strong aria-label={`${confidenceScore} percent confidence, ${confidenceLabel}`}>
+              {confidenceScore}% <span>{confidenceLabel}</span>
+            </strong>
+          </div>
+          <div
+            className="confidence-meter"
+            role="meter"
+            aria-label="Comparison confidence score"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={confidenceScore}
+          >
+            <span style={{ width: `${confidenceScore}%` }} />
+          </div>
+          <p className="confidence-note">
+            Heuristic confidence in this comparison, not a probability that an entire article or news outlet is fake.
+          </p>
+        </section>
 
         {(claim.claimant || claim.topic) && (
           <div className="claim-tags" aria-label="Claim context">

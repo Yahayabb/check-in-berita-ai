@@ -958,7 +958,8 @@ textarea[readonly] {
   --verdict-soft: #fff6df;
 }
 
-.verdict-contradicted {
+.verdict-contradicted,
+.verdict-false-information {
   --verdict: #b4233c;
   --verdict-soft: #fff0f2;
 }
@@ -980,6 +981,14 @@ textarea[readonly] {
   color: var(--verdict);
 }
 
+.verdict-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.false-claim-badge,
 .review-badge {
   padding: 6px 10px;
   border: 1px solid #ead8a9;
@@ -990,6 +999,12 @@ textarea[readonly] {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.false-claim-badge {
+  border-color: #efb5bf;
+  color: #962039;
+  background: #fff0f2;
 }
 
 .verdict-heading {
@@ -1024,6 +1039,71 @@ textarea[readonly] {
   color: #425464;
   font-size: 15px;
   line-height: 1.7;
+}
+
+.confidence-panel {
+  padding: 20px 34px;
+  border-top: 1px solid var(--soft-line);
+  border-bottom: 1px solid var(--soft-line);
+  background: var(--verdict-soft);
+}
+
+.confidence-heading-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.confidence-heading-row .section-kicker {
+  margin-bottom: 5px;
+  color: var(--verdict);
+}
+
+.confidence-heading-row > div > p:last-child {
+  margin: 0;
+  color: #425464;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.confidence-heading-row > strong {
+  flex: 0 0 auto;
+  color: var(--verdict);
+  font-family: 'Manrope', sans-serif;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.confidence-heading-row > strong span {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.confidence-meter {
+  height: 8px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(100 116 132 / 18%);
+}
+
+.confidence-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--verdict);
+}
+
+.confidence-note {
+  margin: 10px 0 0;
+  color: #647484;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .claim-tags {
@@ -1853,6 +1933,7 @@ textarea[readonly] {
 
   .verdict-topline,
   .verdict-heading,
+  .confidence-panel,
   .evidence-section,
   .limitations-section,
   .coverage-card {

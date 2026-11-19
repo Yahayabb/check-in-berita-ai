@@ -3,6 +3,7 @@ export type Verdict =
   | 'Mostly supported'
   | 'Missing context'
   | 'Contradicted'
+  | 'False information'
   | 'Insufficient evidence';
 
 export interface ClaimEvidence {
@@ -55,5 +56,7 @@ export interface VerificationResult {
   claim: ClaimEvidence | null;
   profile: EntityInclination | null;
   score: number;
+  confidenceScore: number;
+  isAbsurd: boolean;
   matchedAlias: string;
 }
