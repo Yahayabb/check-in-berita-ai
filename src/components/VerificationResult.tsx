@@ -1,4 +1,5 @@
 import type { ClaimEvidence, EntityInclination } from '../types';
+import { getSafeSourceUrl } from '../lib/sourceUrl';
 import { CoverageProfile } from './CoverageProfile';
 import { Icon } from './Icon';
 import type { IconName } from './Icon';
@@ -34,7 +35,8 @@ export function VerificationResult({
   profile,
   matchedAlias,
 }: VerificationResultProps) {
-  const sourceUrl = claim.sourceUrl.trim();
+  const hasSourceUrl = claim.sourceUrl.trim().length > 0;
+  const sourceUrl = getSafeSourceUrl(claim.sourceUrl);
   const officialValueLabel = claim.needsHumanVerification
     ? 'Registry comparison value'
     : 'Official value';
@@ -119,9 +121,13 @@ export function VerificationResult({
               <span>Source title</span>
               <strong>{claim.sourceTitle}</strong>
               {sourceUrl ? (
-                <a href={sourceUrl} target="_blank" rel="noreferrer">
+                <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
                   Open original source <Icon name="external" size={15} />
                 </a>
+              ) : hasSourceUrl ? (
+                <p className="source-pending">
+                  Source link hidden because it is not an approved official HTTPS endpoint.
+                </p>
               ) : (
                 <p className="source-pending">Source URL pending human verification</p>
               )}

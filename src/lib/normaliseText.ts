@@ -1,6 +1,5 @@
 const STOP_WORDS = new Set([
   'a',
-  'about',
   'ada',
   'adalah',
   'akan',
@@ -88,7 +87,10 @@ export function normaliseText(text: string): string {
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+    .replace(/\brm\s*(?=\d)/g, 'ringgit ')
+    .replace(/\b\d{1,3}(?:,\d{3})+(?:\.\d+)?\b/g, (value) => value.replace(/,/g, ''))
     .replace(/%/g, ' percent ')
+    .replace(/\bper\s+cent\b/g, ' percent ')
     .replace(/(\d)\.(\d)/g, '$1\uE000$2')
     .replace(/[^\p{L}\p{N}\uE000]+/gu, ' ')
     .replace(/\uE000/g, '.')

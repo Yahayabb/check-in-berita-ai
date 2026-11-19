@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { claims } from '../data/claims';
 import { profiles } from '../data/profiles';
 import { verifyClaim } from '../lib/verifyClaim';
+import { getSafeSourceUrl } from '../lib/sourceUrl';
 
 describe('demo evidence flow', () => {
   it.each([
@@ -34,5 +35,23 @@ describe('demo evidence flow', () => {
       expect(profile.officialDataCitations / profile.sampleSize).toBeLessThanOrEqual(1);
       expect(JSON.stringify(profile)).not.toContain('truthPercentage');
     }
+  });
+});
+
+describe('evidence source endpoints', () => {
+  it('accepts every curated registry source', () => {
+    for (const claim of claims) {
+      expect(getSafeSourceUrl(claim.sourceUrl)).not.toBeNull();
+    }
+  });
+
+  it.each([
+    'http://www.dosm.gov.my/insecure',
+    'https://dosm.gov.my.example.test/not-official',
+    'https://example.test/https://www.dosm.gov.my',
+    'javascript:alert(1)',
+    'not a URL',
+  ])('blocks an invalid or untrusted endpoint: %s', (sourceUrl) => {
+    expect(getSafeSourceUrl(sourceUrl)).toBeNull();
   });
 });
