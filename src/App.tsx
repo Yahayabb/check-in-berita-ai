@@ -21,7 +21,7 @@ function BrandMark() {
     <svg className="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
       <rect width="44" height="44" rx="12" fill="currentColor" />
       <path d="M12 13.5h20M12 30.5h8" stroke="white" strokeWidth="2.2" strokeLinecap="round" opacity=".72" />
-      <path d="m14 22 5 5 11-12" stroke="#FFD34E" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m14 22 5 5 11-12" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -148,7 +148,7 @@ export default function App() {
         Skip to claim checker
       </a>
 
-      <header className="hero">
+      <header className="site-header" id="top">
         <nav className="topbar page-width" aria-label="Primary navigation">
           <a className="brand" href="#top" aria-label="Check In Berita AI home">
             <BrandMark />
@@ -158,47 +158,50 @@ export default function App() {
             </span>
           </a>
           <div className="topbar-actions">
-            <span className="demo-label"><span aria-hidden="true" /> Curated demo data</span>
-            <a className="methodology-link" href="#methodology">
-              Methodology <Icon name="arrow" size={16} />
+            <span className="demo-label">
+              <span className="status-dot" aria-hidden="true" />
+              <span className="demo-full">Curated demo · 6 claims</span>
+              <span className="demo-compact">Demo · 6 claims</span>
+            </span>
+            <a className="methodology-link" href="#methodology" aria-label="Read the methodology">
+              <span>Methodology</span> <Icon name="arrow" size={16} />
             </a>
           </div>
         </nav>
-
-        <div className="hero-content page-width" id="top">
-          <div className="hero-copy">
-            <p className="hero-eyebrow"><span /> Evidence-led verification for Malaysia</p>
-            <h1>Check the claim.<br /><em>Keep the context.</em></h1>
-            <p className="hero-intro">
-              Compare public claims with a curated evidence registry, see the working, and understand the limits before you share.
-            </p>
-            <p className="bm-tagline" lang="ms">Semak fakta. Fahami konteks. Kongsi dengan yakin.</p>
-          </div>
-
-          <ol className="hero-steps" aria-label="How a claim is checked">
-            <li>
-              <span>01</span>
-              <div><strong>Match</strong><p>Find the closest approved registry claim.</p></div>
-            </li>
-            <li>
-              <span>02</span>
-              <div><strong>Compare</strong><p>Inspect values, calculations and sources.</p></div>
-            </li>
-            <li>
-              <span>03</span>
-              <div><strong>Contextualise</strong><p>Read limitations and related coverage inclination.</p></div>
-            </li>
-          </ol>
-        </div>
       </header>
 
-      <main className="main-content page-width">
-        <section className="checker-card" id="checker" aria-labelledby="checker-heading">
-          <div className="checker-header">
-            <div>
-              <p className="section-kicker">Evidence check</p>
-              <h2 id="checker-heading">What would you like to check?</h2>
-            </div>
+      <main className="main-content">
+        <section className="hero-workspace page-width" aria-labelledby="hero-heading" data-enter>
+          <div className="hero-copy">
+            <p className="hero-eyebrow">Evidence verification for Malaysia</p>
+            <h1 id="hero-heading">Check Malaysian claims against the evidence.</h1>
+            <p className="hero-intro">
+              Compare a statement with six curated registry entries, inspect the calculation and source, then decide what the evidence supports.
+            </p>
+            <p className="bm-tagline" lang="ms">Semak fakta. Fahami konteks. Kongsi dengan yakin.</p>
+
+            <ol className="hero-steps" aria-label="How a claim is checked">
+              <li>
+                <span>01</span>
+                <div><strong>Match the wording</strong><p>Find the closest approved registry claim.</p></div>
+              </li>
+              <li>
+                <span>02</span>
+                <div><strong>Inspect the evidence</strong><p>Compare values, calculations and sources.</p></div>
+              </li>
+              <li>
+                <span>03</span>
+                <div><strong>Read the limits</strong><p>Keep registry gaps and coverage context in view.</p></div>
+              </li>
+            </ol>
+          </div>
+
+          <section className="checker-card" id="checker" aria-labelledby="checker-heading">
+            <div className="checker-header">
+              <div>
+                <p className="section-kicker">Claim checker</p>
+                <h2 id="checker-heading">Start with the exact wording</h2>
+              </div>
             <span className="registry-status"><span aria-hidden="true" /> Approved registry</span>
           </div>
 
@@ -334,12 +337,14 @@ export default function App() {
             )}
           </div>
 
-          <div className="checker-footnote">
-            <Icon name="shield" size={16} />
-            <span>Frontend-only demonstration. Always consult the original evidence for important decisions.</span>
-          </div>
+            <div className="checker-footnote">
+              <Icon name="shield" size={16} />
+              <span>Frontend-only demonstration. Always consult the original evidence for important decisions.</span>
+            </div>
+          </section>
         </section>
 
+        <div className="page-width outcome-content">
         {status === 'error' && (
           <div className="error-banner" role="alert">
             <Icon name="alert" size={22} />
@@ -429,12 +434,13 @@ export default function App() {
             </div>
           </div>
         </details>
+        </div>
       </main>
 
       <footer className="footer">
         <div className="page-width footer-inner">
           <div className="footer-brand"><BrandMark /><div><strong>Check In Berita AI</strong><span lang="ms">Semak dahulu, kongsi kemudian.</span></div></div>
-          <p>Curated demo data <span aria-hidden="true">·</span> Frontend-only MVP <span aria-hidden="true">·</span> Built for careful reading</p>
+          <p>Six claim fixtures <span aria-hidden="true">·</span> Browser-based OCR <span aria-hidden="true">·</span> Original sources linked</p>
           <a href="#checker">Back to checker <span aria-hidden="true">↑</span></a>
         </div>
       </footer>

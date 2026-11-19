@@ -148,13 +148,13 @@ export default function ScreenshotOcr({ onUseText }: ScreenshotOcrProps) {
 
   return (
     <section className="ocr-panel" aria-labelledby={`${inputId}-title`}>
-      <h2 id={`${inputId}-title`}>Check text from a screenshot</h2>
-      <p id={`${inputId}-help`}>
+      <h3 className="sr-only" id={`${inputId}-title`}>Check text from a screenshot</h3>
+      <p className="ocr-privacy" id={`${inputId}-help`}>
         Choose a PNG or JPG image. OCR runs in your browser; this component does not upload
         your image.
       </p>
 
-      <label htmlFor={`${inputId}-file`}>Screenshot (PNG or JPG)</label>
+      <label className="ocr-file-label" htmlFor={`${inputId}-file`}>Screenshot (PNG or JPG)</label>
       <input
         id={`${inputId}-file`}
         type="file"
@@ -163,41 +163,43 @@ export default function ScreenshotOcr({ onUseText }: ScreenshotOcrProps) {
         onChange={handleFileChange}
       />
 
-      {error && <p role="alert">{error}</p>}
+      {error && <p className="ocr-message ocr-error" role="alert">{error}</p>}
 
       {previewUrl && (
         <div className="ocr-preview">
-          <img src={previewUrl} alt={`Preview of ${fileName}`} />
           <p>{fileName}</p>
+          <img src={previewUrl} alt={`Preview of ${fileName}`} />
         </div>
       )}
 
       {status === 'reading' && (
-        <div role="status" aria-live="polite">
+        <div className="ocr-progress" role="status" aria-live="polite">
           <p>{statusMessage}</p>
-          <progress max="100" value={progress} aria-label="OCR progress">
-            {progress}%
-          </progress>
-          <span>{progress}%</span>
+          <div>
+            <progress max="100" value={progress} aria-label="OCR progress">
+              {progress}%
+            </progress>
+            <span>{progress}%</span>
+          </div>
         </div>
       )}
 
       {status === 'success' && statusMessage && (
-        <p role="status">{statusMessage}</p>
+        <p className="ocr-message ocr-success" role="status">{statusMessage}</p>
       )}
 
       {isDemoFile && previewUrl && status === 'reading' && (
         <div className="ocr-demo-option">
-          <button type="button" onClick={usePreparedDemoText}>
+          <button className="secondary-button" type="button" onClick={usePreparedDemoText}>
             Use prepared demo OCR text
           </button>
           <p>This optional shortcut uses the filename, not text recognized from the image.</p>
         </div>
       )}
 
-      {usedFallback && <p role="status">{DEMO_FALLBACK_LABEL}</p>}
+      {usedFallback && <p className="ocr-message ocr-fallback" role="status">{DEMO_FALLBACK_LABEL}</p>}
 
-      <label htmlFor={`${inputId}-text`}>Extracted text (editable)</label>
+      <label className="ocr-text-label" htmlFor={`${inputId}-text`}>Extracted text (editable)</label>
       <textarea
         id={`${inputId}-text`}
         value={text}
@@ -205,7 +207,7 @@ export default function ScreenshotOcr({ onUseText }: ScreenshotOcrProps) {
         rows={5}
         placeholder="Recognized text will appear here for review."
       />
-      <button type="button" onClick={handleUseText} disabled={!text.trim()}>
+      <button className="primary-button ocr-check-button" type="button" onClick={handleUseText} disabled={!text.trim()}>
         Check this text
       </button>
     </section>

@@ -41,7 +41,7 @@ export function VerificationResult({
 
   return (
     <div className="result-stack">
-      <article className={`verdict-card verdict-${verdictClass(verdict)}`}>
+      <article className={`verdict-card verdict-${verdictClass(verdict)}`} aria-labelledby="result-heading">
         <div className="verdict-topline">
           <p className="section-kicker">Verification result</p>
           {claim.needsHumanVerification && <span className="review-badge">Human review needed</span>}
